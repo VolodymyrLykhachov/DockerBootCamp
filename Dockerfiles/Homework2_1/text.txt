@@ -1,0 +1,1 @@
+Now you goal is to pass message from a file. To do this you have to create a file with some text, copy it to the Docker image and pass a text from the file to cowsay
