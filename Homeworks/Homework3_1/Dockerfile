@@ -4,6 +4,5 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /flask
 COPY ./hits/app.py ./app.py
-COPY ./logs/ ./logs/
 CMD [ "python", "./app.py" ]
 EXPOSE 5000
