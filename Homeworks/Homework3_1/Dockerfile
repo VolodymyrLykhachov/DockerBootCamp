@@ -6,3 +6,4 @@ WORKDIR /flask
 COPY ./hits/app.py ./app.py
 CMD [ "python", "./app.py" ]
 EXPOSE 5000
+VOLUME /flask/logs
