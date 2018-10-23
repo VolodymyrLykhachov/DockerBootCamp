@@ -1,6 +1,5 @@
 FROM python:3
 LABEL MAINTAINER="Volodymyr Lykhachov"
-COPY test-requirements.txt ./
-COPY tests/test_app.py tests/conftest.py ./
+COPY test-requirements.txt tests/test_app.py tests/conftest.py ./
 RUN pip install --no-cache-dir -r test-requirements.txt
 CMD [ "py.test", "test_app.py", "--url", "http://hits:5000" ]

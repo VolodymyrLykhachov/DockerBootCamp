@@ -1,0 +1,6 @@
+FROM python:3.4-alpine
+LABEL MAINTAINER="Volodymyr Lykhachov"
+COPY test-requirements.txt tests/test_app.py tests/conftest.py ./
+RUN pip install --no-cache-dir -r test-requirements.txt
+CMD [ "py.test", "test_app.py", "--url", "http://loadbalancer:80" ]
+# RUN wait-for-it.sh loadbalancer:80 --timeout=50 --strict py.test test_app.py --url http://loadbalancer:80

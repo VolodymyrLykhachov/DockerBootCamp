@@ -1,0 +1,69 @@
+version: '3'
+services:
+  hits:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: violant/hits:h4
+    ports:
+    - "5000"
+    links:
+    - redis
+    networks:
+    - front-tier
+    - back-tier
+    volumes:
+      - logs:/code/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: "redis:alpine"
+    volumes:
+    - redis-data:/data
+    - logs:/data/logs
+    networks:
+    - back-tier
+
+  loadbalancer:
+    image: 'dockercloud/haproxy:latest'
+    links:
+    - hits
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+    - 8080:80
+    networks:
+    - front-tier
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  test_app:
+    image: violant/hits-at:h4
+    build:
+      context: .
+      dockerfile: Dockerfile.at
+    networks:
+    - front-tier
+    depends_on:
+    - hits
+    - loadbalancer
+
+
+volumes:
+  redis-data:
+    driver: local
+  logs:
+    driver: local
+
+networks:
+  front-tier:
+    driver: bridge
+  back-tier:
+    driver: bridge
