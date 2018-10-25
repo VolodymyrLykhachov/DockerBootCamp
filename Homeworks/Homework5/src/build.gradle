@@ -1,0 +1,37 @@
+group 'com.extsoft'
+version '1.1.0'
+description 'Allure + Docker + Junit example'
+
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+defaultTasks 'clean', 'build'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.aspectj:aspectjweaver:${aspectjVersion}"
+    compile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
+    compile group: 'com.codeborne', name: 'selenide', version: '3.5.1'
+    compile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'io.github.tatools', name: 'sunshine-junit4', version: '0.1.0'
+    compile "ru.yandex.qatools.allure:allure-junit-adaptor:${allureVersion}"
+
+    jar {
+        from {
+            (configurations.runtime).collect {
+                it.isDirectory() ? it : zipTree(it)
+            }
+        }
+        manifest {
+            attributes 'Main-Class': 'pro.extsoft.allure.docker.example.App'
+        }
+    }
+}
+
+test {
+    useJUnit()
+}
